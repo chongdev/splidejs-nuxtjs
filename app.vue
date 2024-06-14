@@ -1,6 +1,11 @@
 <template>
   <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    <SplideComponent />
   </div>
 </template>
+
+<script>
+export default {
+
+}
+</script>
