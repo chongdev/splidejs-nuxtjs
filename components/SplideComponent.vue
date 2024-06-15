@@ -3,7 +3,7 @@
         <div ref="splide" class="splide">
             <div class="splide__track">
                 <ul class="splide__list">
-                    <li v-for="(item, index) in items" :key="index" class="splide__slide">
+                    <li v-for="(item, index) in slides" :key="index" class="splide__slide">
                         <div class="card">
                             <div class="imageWraper">
                                 <img :src="item" alt="" width="" height="" />
@@ -12,6 +12,18 @@
                     </li>
                 </ul>
             </div>
+        </div>
+
+        <div class="custom-pagination">
+            <button v-for="(slide, index) in slides" :key="index" :class="{ active: currentSlide === index }"
+                @click="goToSlide(index)">
+                {{ index + 1 }}
+            </button>
+        </div>
+
+        <div class="custom-arrows">
+            <button @click="goToSlide(currentSlide - 1)" :disabled="currentSlide === 0">Prev</button>
+            <button @click="goToSlide(currentSlide + 1)" :disabled="currentSlide === slides.length - 1">Next</button>
         </div>
     </div>
 </template>
@@ -31,17 +43,33 @@ export default {
         }
 
         return {
-            items,
+            slides: items,
+            splide: null,
+            currentSlide: 0,
         }
     },
 
     mounted() {
-        new Splide(this.$refs.splide, {
+        this.splide = new Splide(this.$refs.splide, {
             type: 'loop',
             perPage: 1,
             autoplay: true,
             interval: 3000,
+
+            // heightRatio: 0.5,
+            pagination: false,
+            arrows: false,
         }).mount();
+
+        this.splide.on('move', (newIndex) => {
+            this.currentSlide = newIndex;
+        });
+    },
+    methods: {
+        goToSlide(index) {
+            this.splide.go(index);
+            this.currentSlide = index;
+        },
     },
 }
 </script>
